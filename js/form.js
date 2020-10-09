@@ -3,36 +3,88 @@ botaoAdd.addEventListener("click", function(){
    event.preventDefault();
    
    var form = document.querySelector("#form-add");
+   var paciente = obtemInfo(form);
+   var pacienteTr = montaTr(paciente);
+   var erros = validaPaciente(paciente);
 
-   var nome = form.nome.value;
-   var altura = form.altura.value;
-   var peso = form.peso.value;
-   var gordura = form.gordura.value;
+   if(erros.length > 0){
+       exibeMsgErro(erros);
+       return;
+               
+   } 
+    // adicionando as informações na tabela
 
-   var pacienteTr = document.createElement("tr");
-
-   var nomeTd = document.createElement("td");
-   var pesoTd = document.createElement("td");
-   var alturaTd = document.createElement("td");
-   var gorduraTd = document.createElement("td");
-   var imcTd = document.createElement("td");
-
-   nomeTd.textContent = nome;
-   pesoTd.textContent = peso;
-   alturaTd.textContent = altura;
-   gorduraTd.textContent = gordura;
-
-   imcTd.textContent = peso*(altura/altura);
-
-   pacienteTr.appendChild(nomeTd);
-   pacienteTr.appendChild(pesoTd);
-   pacienteTr.appendChild(alturaTd);
-   pacienteTr.appendChild(gorduraTd);
-   pacienteTr.appendChild(imcTd);
-   
-
-   var tabela = document.querySelector("#tabela-pacientes");
-   tabela.appendChild(pacienteTr);
-
+    var tabela = document.querySelector("#tabela-pacientes");
+    tabela.appendChild(pacienteTr);
+    
+    form.reset();
    
 });
+
+function exibeMsgErro(erros){
+    var ul = document.querySelector("#mensagem-erro");
+    erros.forEach(function(erro){
+        var li = document.createElement("li");
+        li.textContent = erro;
+        ul.appendChild(li);
+    });
+     
+    return;
+}
+
+function obtemInfo(form){
+
+    var paciente = {
+        nome: form.nome.value,
+        altura: form.altura.value,
+        peso: form.peso.value,
+        gordura: form.gordura.value,
+        imc: calcularImc(form.peso.value, form.altura.value)
+
+    } // o uso de chaves cria um objeto onde damos as caracteristícas ao objeto. em vez de criar muitas váriaveis, criamos 1 (o objeto) que contém todas as informações necessárias.
+    return paciente;
+
+}
+
+function montaTr(paciente){
+    // cria a TR e a TD do paciente
+   var pacienteTr = document.createElement("tr");
+   pacienteTr.classList.add("paciente");
+
+   pacienteTr.appendChild(montaTd(paciente.nome, "info-nome"));
+   pacienteTr.appendChild(montaTd(paciente.peso, "info-peso"));
+   pacienteTr.appendChild(montaTd(paciente.altura, "info-altura"));
+   pacienteTr.appendChild(montaTd(paciente.gordura, "infoe-gordura"));
+   pacienteTr.appendChild(montaTd(paciente.imc, "info-imc")); 
+
+   return pacienteTr;
+
+}
+
+function montaTd(dado,classe){
+    var td = document.createElement("td");
+    td.textContent = dado;
+    td.classList.add(classe);
+
+    return td;
+
+}
+
+function validaPaciente (paciente){
+
+    var erros = [];
+
+    if(paciente.nome.length==0){
+        erros.push("Adicione um nome válido")
+    }
+
+    if (!validaPeso(paciente.peso)) {
+        erros.push ("Peso inválido");
+    }
+
+    if (!validaAltura(paciente.altura)){
+        erros.push ("Altura inválida");   
+    }
+
+    return erros;
+}
