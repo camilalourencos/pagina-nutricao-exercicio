@@ -51,6 +51,14 @@ section h2{
 	margin-bottom: .5em;
 }
 
+.filtro {
+	display: inline-block;
+}
+#filtrar-tabela{
+	width: 200px;
+	height: 20px;
+	margin-bottom: 20px;
+}
 table{
 	width: 100%;
 	margin-bottom : .5em;
@@ -141,4 +149,13 @@ button[disabled=disabled], button:disabled {
 	font-weight: bold;
 	font-size: larger;
 	color: red;
+}
+
+.fade-out{
+	opacity: 0;
+	transition: 0.5s;
+}
+
+.invisivel{
+	display: none;
 }
